@@ -11,6 +11,11 @@ class PessoaServices extends Services {
         return listaMatriculas;
     }
 
+    async pegaPessoasEscopoTodos () {
+        const listaPessoas = await super.pegaRegistroPorEscopo('todosOsRegistros');
+        return listaPessoas;
+    }
+
 }
 
 module.exports = PessoaServices;
