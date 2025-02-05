@@ -1,3 +1,5 @@
+const convertIds = require('../utils/conversorDeStringHelper.js')
+
 class Controller {
     constructor (entidadeService) {
         this.entidadeService = entidadeService;
@@ -21,6 +23,17 @@ class Controller {
     }
   }
 
+  async pegaUm(req, res) {
+    const { ...params } = req.params;
+    const where = convertIds(params)
+    try {
+      const umRegistro = await this.entidadeService.pegaUmRegistro(where);
+      return res.status(200).json(umRegistro);
+    } catch (erro) {
+      return res.status(500).json({ erro: erro.message });
+    }
+  }
+
   async criaNovo(req, res) {
     const dadosParaCriacao = req.body;
     try {
@@ -32,11 +45,13 @@ class Controller {
   }
 
     async atualiza(req, res) {
-        const { id } = req.params;
+        const { ...params } = req.params;
         const dadosAtualizados = req.body;
         
+      const where = convertIds(params)
+
         try {
-            const foiAtualizado = await this.entidadeService.atualizaRegisto(dadosAtualizados, Number(id));
+            const foiAtualizado = await this.entidadeService.atualizaRegistro(dadosAtualizados, where);
             if(!foiAtualizado) {
                 return res.status(400).json({ mensagem: "registro não foi atualizado" })
             }
